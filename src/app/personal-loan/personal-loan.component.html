@@ -1,0 +1,70 @@
+<div class="card m-3">
+    <h5 class="card-header text-center font-weight-bold">Personal Loan</h5>
+    <div class="card-body">
+        <form [formGroup]="registerForm" >
+            <div class="form-row">
+              <div class="col-md-3"></div>
+               <div class="form-group col-md-6"> 
+                    <label>City</label>
+                    <input type="text" formControlName="city" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.city.errors }" />
+                    <div *ngIf="submitted && f.city.errors" class="invalid-feedback">
+                        <div *ngIf="f.city.errors.required">city is required</div>
+                    </div>
+                    <label>Pan Number </label>
+                    <input type="text" formControlName="panNumber" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.panNumber.errors }" />
+                    <div *ngIf="submitted && f.panNumber.errors" class="invalid-feedback">
+                          <div *ngIf="f.panNumber.errors.required">pan Number is required</div>
+                          <div *ngIf="f.panNumber.errors.minlength">pan Number min  length 10 required</div>
+                          <div *ngIf="f.panNumber.errors.maxlength">pan Number max lenght 10 required</div>
+                          <div *ngIf="f.panNumber.errors.pattern">pan Number pattern required</div>
+                    </div>
+                    <label>Full Name </label>
+                       <input type="text" formControlName="fullname" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.fullname.errors }" />
+                       <div *ngIf="submitted && f.fullname.errors" class="invalid-feedback">
+                           <div *ngIf="f.fullname.errors.required">full name is required</div>
+                            <div *ngIf="f.fullname.errors.maxlength">full name no more than 140</div>
+                      </div>
+                    <label>email </label>
+                        <input type="text" formControlName="email" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.email.errors }" />
+                        <div *ngIf="submitted && f.email.errors" class="invalid-feedback">
+                            <div *ngIf="f.email.errors.required">email is required</div>
+                            <div *ngIf="f.email.errors.email">Email must be a valid email address</div>
+                            <div *ngIf="f.email.errors.maxlength">Email no more than 255 </div>
+                        </div>
+                  <label>mobile </label>
+                      <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                          <span class="input-group-text" id="basic-addon1">+91</span>
+                        </div>
+                      <input type="text" formControlName="mobile" (blur)="onSubmit()" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }"/>
+                      <div *ngIf="submitted && f.mobile.errors" class="invalid-feedback">
+                          <div *ngIf="f.mobile.errors.required">mobile is required</div>
+                          <div *ngIf="f.mobile.errors.maxlength">mob no more than 10 </div>
+                          <div *ngIf="f.mobile.errors.pattern">please enter mob number only number </div>
+  
+                      </div>
+                    </div>
+
+                  <div *ngIf="otpAPI" class="col-md-12" >
+                  <label>OTP </label>
+                    <input type="text"  formControlName="otp" class="form-control" (blur)="veryfyOtp()" [ngClass]="{ 'is-invalid': submitted && f.otp.errors }" />
+                      <div *ngIf="submitted && f.otp.errors" class="invalid-feedback">
+                         <div *ngIf="f.otp.errors.required">otp required</div>
+                         <div *ngIf="f.otp.errors.maxlength">otp no more than 4</div>
+                         <div *ngIf="f.otp.errors.pattern">please  OTP should only number </div>
+
+                       </div>
+                     <span><a href="#" (click)="otpCount()" [class.disabled]="reset">resend otp</a></span>
+                    </div>
+                    <div class="text-center">
+                <button class="btn btn-primary" type="reset" (click)="onReset()">Cancel</button>
+            </div>
+         
+                </div>  
+                <div class="col-md-3"></div>
+           </div>
+      </form>
+    </div>
+  </div>
+  
+  
