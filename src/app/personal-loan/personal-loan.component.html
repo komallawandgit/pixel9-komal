@@ -39,7 +39,8 @@
                       <input type="text" formControlName="mobile" (blur)="onSubmit()" class="form-control"  [ngClass]="{ 'is-invalid': submitted && f.mobile.errors }"/>
                       <div *ngIf="submitted && f.mobile.errors" class="invalid-feedback">
                           <div *ngIf="f.mobile.errors.required">mobile is required</div>
-                          <div *ngIf="f.mobile.errors.maxlength">mob no more than 10 </div>
+                          <div *ngIf="f.mobile.errors.minlength">mobile number should be 10 digit</div>
+                          <div *ngIf="f.mobile.errors.maxlength">mobile number should be 10 digit</div>
                           <div *ngIf="f.mobile.errors.pattern">please enter mob number only number </div>
   
                       </div>
@@ -54,13 +55,11 @@
                          <div *ngIf="f.otp.errors.pattern">please  OTP should only number </div>
 
                        </div>
-                     <span><a href="#" (click)="otpCount()" [class.disabled]="reset">resend otp</a></span>
+                     <span *ngIf="hidelink">
+                      <button type="button" class="btn btn-link" (click)="otpCount()" [class.disabled]="reset">resend otp</button>                       
+                      /link will be activate after 3 minute</span>
                     </div>
-                    <div class="text-center">
-                <button class="btn btn-primary" type="reset" (click)="onReset()">Cancel</button>
-            </div>
-         
-                </div>  
+                  </div>  
                 <div class="col-md-3"></div>
            </div>
       </form>

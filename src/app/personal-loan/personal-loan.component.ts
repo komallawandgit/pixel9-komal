@@ -5,6 +5,7 @@ import{ApiCallServiceService} from '../api-call-service.service';
 import { from } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Router,ActivatedRoute } from '@angular/router';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 
@@ -22,6 +23,8 @@ export class PersonalLoanComponent implements OnInit {
   reset:boolean=true;
   subscription: Subscription;
   otpcnt:number=0;
+  hidelink:boolean=true;
+
 
 
   constructor(private formBuilder: FormBuilder,private api:ApiCallServiceService,private route:Router) { }
@@ -32,15 +35,17 @@ export class PersonalLoanComponent implements OnInit {
           panNumber: ['',[Validators.required,Validators.minLength(10),Validators.maxLength(10),Validators.pattern("^[A-Za-z]{5}[0-9]{4}[A-Za-z]$")]],
           fullname: ['',[Validators.required,Validators.maxLength(140)]],
           email:['',[Validators.required,Validators.email,Validators.maxLength(255)]],
-          mobile:['',[Validators.required,Validators.maxLength(10),Validators.pattern("^[0-9]*$")]],
+          mobile:['',[Validators.required,Validators.minLength(10),Validators.maxLength(10),Validators.pattern("^[0-9]*$")]],
           otp: ['']
         },
       );
-
+        
      
    
   }
+
   getOtp(){
+ 
 
     let obj={
       "panNumber": this.registerForm.controls.panNumber.value,
@@ -50,20 +55,14 @@ export class PersonalLoanComponent implements OnInit {
       "mobile": this.registerForm.controls.mobile.value
     }
     this.api.getOtp(obj).subscribe(res => {
-      //this.otpAPI = res;
-      // console.log('data response', this.otpAPI);
       if(res.status=="Success"){
+        debugger
         this.otpAPI=true;
+
         const otp = <FormControl>this.registerForm.get('otp');
-        this.subscription = this.registerForm.valueChanges.subscribe(value => {
-          if (value) {
-            otp.setValidators([Validators.required,Validators.maxLength(4),Validators.pattern("^[0-9]*$") ])
-          }
-          else {
-            otp.setValidators(null);
-          }
-          otp.updateValueAndValidity();
-        });
+        otp.setValidators([Validators.required,Validators.maxLength(4),Validators.pattern("^[0-9]*$") ])
+        otp.updateValueAndValidity();
+    
        
         setTimeout(()=>{
         this.reset=false;
@@ -74,51 +73,52 @@ export class PersonalLoanComponent implements OnInit {
   }
 
   veryfyOtp(){
+    debugger
+    
     let body={
        "mobile":this.registerForm.controls.mobile.value,
        "otp":this.registerForm.controls.otp.value
     }
-
-    this.api.verifyOtp(body).subscribe(res => {
-    debugger;
-      if(res.status=="Success"){
-      this.route.navigate([`displayComp`])
-      alert("Thank you for verification" +this.registerForm.controls.fullname.value)
-      }
-    });
-
+     if (this.registerForm.invalid) {
+      return;
+     }else{
+        this.api.verifyOtp(body).subscribe(res => {
+        if(res.status=="Success"){
+          this.route.navigate([`displayComp`])
+          alert("Thank you for verification" +this.registerForm.controls.fullname.value)
+        }
+      });
+    }
+  
 
   }
+
   otpCount(){
   this.otpcnt=this.otpcnt+1;
   if(this.otpcnt > 3){
+    this.hidelink=false;
+
+    setTimeout(()=>{
       this.reset=true;
       alert('Please try again after an hour.')
+    },180000)
   }
   else{
   this.getOtp();
 
   }
-
-
-  }
+}
 
 
   get f() { return this.registerForm.controls; }
 
   onSubmit(){
-    debugger
         this.submitted = true;
         if (this.registerForm.invalid) {
             return;
         }
         this.getOtp();
   }
-
-onReset(){
-   this.submitted = false;
-   this.registerForm.reset();
-}
 
   ngOnDestroy(): void {
     if (this.subscription) {

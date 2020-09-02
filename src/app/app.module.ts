@@ -21,7 +21,7 @@ import { Routes, RouterModule } from '@angular/router';
     ReactiveFormsModule,
     HttpClientModule,
     RouterModule.forRoot([
-      { path: '', component: PersonalLoanComponent },
+      {path:'verify',component:PersonalLoanComponent},
       {path:'displayComp',component:DisplayCompComponent}
     ])
   ],
