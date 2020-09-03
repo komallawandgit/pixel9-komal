@@ -1,5 +1,5 @@
 <div class="card m-3">
-    <h5 class="card-header text-center font-weight-bold">Personal Loan</h5>
+  <h5 class="card-header text-center font-weight-bold">Personal Loan</h5>
     <div class="card-body">
         <form [formGroup]="registerForm" >
             <div class="form-row">
@@ -42,9 +42,12 @@
                           <div *ngIf="f.mobile.errors.minlength">mobile number should be 10 digit</div>
                           <div *ngIf="f.mobile.errors.maxlength">mobile number should be 10 digit</div>
                           <div *ngIf="f.mobile.errors.pattern">please enter mob number only number </div>
-  
-                      </div>
+                        </div>
                     </div>
+                    <div class="spinner" *ngIf="spin">
+                      <div class="spinner-border"></div>
+                    </div>
+                    
 
                   <div *ngIf="otpAPI" class="col-md-12" >
                   <label>OTP </label>
@@ -53,11 +56,11 @@
                          <div *ngIf="f.otp.errors.required">otp required</div>
                          <div *ngIf="f.otp.errors.maxlength">otp no more than 4</div>
                          <div *ngIf="f.otp.errors.pattern">please  OTP should only number </div>
+                        </div>
 
-                       </div>
                      <span *ngIf="hidelink">
                       <button type="button" class="btn btn-link" (click)="otpCount()" [class.disabled]="reset">resend otp</button>                       
-                      /link will be activate after 3 minute</span>
+                      <span class="timeFont">link will be activate after 3 minute</span></span>
                     </div>
                   </div>  
                 <div class="col-md-3"></div>

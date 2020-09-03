@@ -7,3 +7,20 @@ a.disabled {
 .card-body{
 	background-color:#f3faf1;
 }
+.timeFont{
+    font-size: 10px;
+}
+.spinner{
+    width: 100%;
+    height: 100%;
+    display: block;
+    position: absolute;
+    z-index: 1031; /* High z-index so it is on top of the page */
+    top: 50%;
+    right: 50%; 
+    left:50%;
+    /* or: left: 50%; */
+  /*  margin-top: -..px; /* half of the elements height */
+  /*  margin-right: -..px; /* half of the elements widht */
+      
+}

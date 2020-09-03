@@ -5,10 +5,6 @@ import{ApiCallServiceService} from '../api-call-service.service';
 import { from } from 'rxjs';
 import { Subscription } from 'rxjs';
 import { Router,ActivatedRoute } from '@angular/router';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
-
-
-
 @Component({
   selector: 'app-personal-loan',
   templateUrl: './personal-loan.component.html',
@@ -24,11 +20,8 @@ export class PersonalLoanComponent implements OnInit {
   subscription: Subscription;
   otpcnt:number=0;
   hidelink:boolean=true;
-
-
-
+  spin:boolean=false;
   constructor(private formBuilder: FormBuilder,private api:ApiCallServiceService,private route:Router) { }
-
   ngOnInit() {
         this.registerForm = this.formBuilder.group({
           city: ['', Validators.required],
@@ -39,14 +32,9 @@ export class PersonalLoanComponent implements OnInit {
           otp: ['']
         },
       );
-        
-     
-   
   }
 
   getOtp(){
- 
-
     let obj={
       "panNumber": this.registerForm.controls.panNumber.value,
       "city": this.registerForm.controls.city.value,
@@ -54,27 +42,21 @@ export class PersonalLoanComponent implements OnInit {
       "email": this.registerForm.controls.email.value,
       "mobile": this.registerForm.controls.mobile.value
     }
+    this.spin=true; //spinner start
     this.api.getOtp(obj).subscribe(res => {
       if(res.status=="Success"){
-        debugger
+        this.spin=false; //spinner stop
         this.otpAPI=true;
-
         const otp = <FormControl>this.registerForm.get('otp');
         otp.setValidators([Validators.required,Validators.maxLength(4),Validators.pattern("^[0-9]*$") ])
         otp.updateValueAndValidity();
-    
-       
         setTimeout(()=>{
         this.reset=false;
-        },180000)
+        },180000) // for 3 minutes 
       }
-     
     });
   }
-
   veryfyOtp(){
-    debugger
-    
     let body={
        "mobile":this.registerForm.controls.mobile.value,
        "otp":this.registerForm.controls.otp.value
@@ -82,48 +64,36 @@ export class PersonalLoanComponent implements OnInit {
      if (this.registerForm.invalid) {
       return;
      }else{
-        this.api.verifyOtp(body).subscribe(res => {
-        if(res.status=="Success"){
+       this.api.verifyOtp(body).subscribe(res => {
+          if(res.status=="Success"){
           this.route.navigate([`displayComp`])
-          alert("Thank you for verification" +this.registerForm.controls.fullname.value)
-        }
-      });
+            alert("Thank you for verification" +this.registerForm.controls.fullname.value)
+          }
+        });
     }
-  
-
   }
-
   otpCount(){
-  this.otpcnt=this.otpcnt+1;
-  if(this.otpcnt > 3){
-    this.hidelink=false;
-
-    setTimeout(()=>{
-      this.reset=true;
+    this.otpcnt=this.otpcnt+1;
+    if(this.otpcnt > 3){
+      this.hidelink=false;
       alert('Please try again after an hour.')
-    },180000)
-  }
-  else{
-  this.getOtp();
-
-  }
-}
-
-
-  get f() { return this.registerForm.controls; }
-
-  onSubmit(){
-        this.submitted = true;
-        if (this.registerForm.invalid) {
-            return;
-        }
-        this.getOtp();
-  }
-
-  ngOnDestroy(): void {
-    if (this.subscription) {
-      this.subscription.unsubscribe();        
+      setTimeout(()=>{
+        this.reset=false;
+        this.hidelink=true;
+      },3600000) //for 1 hour 
+      this.otpcnt=0; 
     }
+    else{
+     this.getOtp();
+    }
+  }
+  get f() { return this.registerForm.controls; }
+  onSubmit(){
+    this.submitted = true;
+      if (this.registerForm.invalid) {//check form validation
+            return;
+      }
+      this.getOtp(); //getOtp function call
   }
 
 }

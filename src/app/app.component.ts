@@ -8,8 +8,6 @@ import{Router,ActivatedRoute} from '@angular/router';
 export class AppComponent implements OnInit {
 
   constructor(private route:Router){
- 
-
   }
 
   ngOnInit() {
